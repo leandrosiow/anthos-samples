@@ -56,6 +56,9 @@ printf "\n✅ Using Project [%s], Zone [%s], Cluster name [%s] and Anthos bare m
 RUN_ALL="All-(Setup-and-Install)"
 SETUP_ONLY="Setup-Only"
 QUIT="Quit"
+SA_KEY_PATH=$HOME/anthos-bm-gcp
+
+
 
 PS3=$'\n''Please select an installation mode: '
 options=("$RUN_ALL" "$SETUP_ONLY" "$QUIT")
@@ -86,12 +89,17 @@ while true; do
       * ) echo "invalid input";;
   esac
 done
+
+
+printf "Setting up local working directory $SA_KEY_PATH"
+mkdir $SA_KEY_PATH
+
 # --------------------------------------------------------------
 
 # create the GCP Service Account to be used by Anthos on bare metal
 printf "🔄 Creating Service Account and Service Account key...\n"
 # [START anthos_bm_gcp_bash_admin_create_sa]
-gcloud iam service-accounts create baremetal-gcr
+gcloud iam service-accounts create baremetal-gcr --project=$PROJECT_ID
 
 gcloud iam service-accounts keys create bm-gcr.json \
     --iam-account=baremetal-gcr@"${PROJECT_ID}".iam.gserviceaccount.com
